@@ -1,5 +1,7 @@
 # pycalphad-xtdb
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23928488.svg)](https://doi.org/10.5281/zenodo.23928488)
+
 Read and write XTDB files in [pycalphad](https://pycalphad.org). XTDB is the XML database
 format for CALPHAD proposed by Sundman et al., *Calphad* 90 (2025) 102849
 ([doi:10.1016/j.calphad.2025.102849](https://doi.org/10.1016/j.calphad.2025.102849)). It
@@ -125,4 +127,6 @@ Cite the original assessments when you use them.
 ## License and citation
 
 Code: MIT, copyright Odinzen LLC. Example data: CC BY 4.0. If you use this package, please
-cite it with the metadata in `CITATION.cff`, and cite the XTDB paper for the format.
+cite it (Zenodo, [doi:10.5281/zenodo.23928488](https://doi.org/10.5281/zenodo.23928488), all
+versions; 0.1.0 is [doi:10.5281/zenodo.23928489](https://doi.org/10.5281/zenodo.23928489)), and
+cite the XTDB paper for the format.

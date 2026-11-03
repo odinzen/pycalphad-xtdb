@@ -4,6 +4,7 @@ title: "pycalphad-xtdb: XTDB database support for pycalphad"
 version: 0.1.0
 date-released: 2026-11-03
 license: MIT
+doi: 10.5281/zenodo.23928488
 repository-code: "https://github.com/odinzen/pycalphad-xtdb"
 authors:
   - family-names: Bustamante
