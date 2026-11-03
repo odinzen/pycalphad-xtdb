@@ -8,6 +8,7 @@ import numpy as np
 import pytest
 
 import pycalphad_xtdb  # noqa: F401  (registers the format)
+from pycalphad_xtdb.reader import _supports_never_disorder
 from pycalphad import Database, Model, calculate, variables as v
 
 RT = float(v.R) * 1000.0
@@ -143,18 +144,55 @@ def test_permutation_and_inline_disordered_part_match_explicit_form():
                                                               T=10.0) - 100
 
 
-def test_disordered_part_without_subtract_drops_the_phase_loudly():
-    body = """<Phase Id="SIGMA" Configuration="CEF" State="S" >
+SIGMA_NO_SUBTRACT = """<Phase Id="SIGMA" Configuration="CEF" State="S" >
   <Sublattices NumberOf="2" Multiplicities="10 20" >
     <Constituents Sublattice="1" List="AG CU" />
     <Constituents Sublattice="2" List="AG CU" />
   </Sublattices>
   <AmendPhase><DisorderedPart Sum="2" /></AmendPhase>
 </Phase>
-<Parameter Id="G(SIGMA,AG:CU;0)" Expr="-1000;" Bibref="t" />""" + LIQUID.replace(" AU", "")
-    with pytest.warns(UserWarning, match="SIGMA.*Subtract"):
-        db = Database.from_string(xtdb(body, elements=("AG", "CU")), fmt="xtdb")
-    assert set(db.phases) == {"LIQUID"}
+<Parameter Id="G(SIGMA,AG;0)" Expr="-500;" Bibref="t" />
+<Parameter Id="G(SIGMA,CU;0)" Expr="-700;" Bibref="t" />
+<Parameter Id="L(SIGMA,AG,CU;0)" Expr="-9000;" Bibref="t" />
+<Parameter Id="G(SIGMA,AG:CU;0)" Expr="-1000;" Bibref="t" />
+<Parameter Id="G(SIGMA,CU:AG;0)" Expr="2000;" Bibref="t" />"""
+
+SIGMA_TDB = """ELEMENT AG BLANK 1 0 0 !
+ELEMENT CU BLANK 1 0 0 !
+TYPE_DEFINITION P GES A_P_D SIGMA NEVER_DIS SIGMA_DIS !
+PHASE SIGMA_DIS % 1 30 !
+CONSTITUENT SIGMA_DIS :AG,CU: !
+PHASE SIGMA %P 2 10 20 !
+CONSTITUENT SIGMA :AG,CU:AG,CU: !
+PARAMETER G(SIGMA_DIS,AG;0) 1 -500; 6000 N !
+PARAMETER G(SIGMA_DIS,CU;0) 1 -700; 6000 N !
+PARAMETER L(SIGMA_DIS,AG,CU;0) 1 -9000; 6000 N !
+PARAMETER G(SIGMA,AG:CU;0) 1 -1000; 6000 N !
+PARAMETER G(SIGMA,CU:AG;0) 1 2000; 6000 N !
+"""
+
+
+@pytest.mark.skipif(not _supports_never_disorder(), reason="needs pycalphad 0.11.2 or later")
+def test_disordered_part_without_subtract_matches_tdb_never_disorder():
+    db = read(xtdb(SIGMA_NO_SUBTRACT, elements=("AG", "CU")))
+    assert db.phases["SIGMA"].model_hints.get("never_disorder") is True
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        ref = Database(SIGMA_TDB)
+    rng = np.random.default_rng(2)
+    y = np.empty((15, 4))
+    y[:, 0::2] = rng.uniform(0.02, 0.98, (15, 2))
+    y[:, 1::2] = 1 - y[:, 0::2]
+    np.testing.assert_allclose(gm(db, "SIGMA", ["AG", "CU"], y), gm(ref, "SIGMA", ["AG", "CU"], y),
+                               rtol=0, atol=1e-8)
+    assert 'Subtract' not in pycalphad_xtdb.xtdb_text(db).split('<Phase Id="SIGMA"')[1].split("</Phase>")[0]
+
+
+@pytest.mark.skipif(_supports_never_disorder(), reason="pycalphad supports never_disorder")
+def test_disordered_part_without_subtract_drops_the_phase_on_old_pycalphad():
+    with pytest.warns(UserWarning, match="SIGMA.*0.11.2"):
+        db = Database.from_string(xtdb(SIGMA_NO_SUBTRACT, elements=("AG", "CU")), fmt="xtdb")
+    assert "SIGMA" not in db.phases
 
 
 def test_unsupported_configuration_and_model_warn():

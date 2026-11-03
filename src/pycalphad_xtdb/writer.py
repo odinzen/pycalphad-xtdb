@@ -142,8 +142,10 @@ def _phase(dbf, phase, params):
         else:
             out.append(tag + " >")
             n_summed = len(phase.sublattices) - (len(dis.sublattices) - 1)
-            out.append(f'    <DisorderedPart Disordered={quoteattr(dis.name)} Sum="{n_summed}" '
-                       f'Subtract="Y" />')
+            # never_disorder (TDB NEVER_DIS) is Eq. 15 of the XTDB paper: no Subtract
+            subtract = "" if hints.get("never_disorder") else ' Subtract="Y"'
+            out.append(f'    <DisorderedPart Disordered={quoteattr(dis.name)} Sum="{n_summed}"'
+                       f'{subtract} />')
             out.append("  </AmendPhase>")
     out.append("</Phase>")
     return out

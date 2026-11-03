@@ -14,7 +14,8 @@ and the two-state liquid) that TDB has no standard place for.
 pip install git+https://github.com/odinzen/pycalphad-xtdb
 ```
 
-Requires pycalphad 0.11 or later.
+Requires pycalphad 0.11 or later; 0.11.2 or later for phases whose disordered part is not
+subtracted (sigma-type phases, see below).
 
 ## Use
 
@@ -62,7 +63,8 @@ database has Einstein parameters on multi-atom endmembers.
   parameters in the TDB form `MQ(PHASE&SPECIES,...)`, and any other identifier pycalphad
   knows. A file's own `ModelDescriptions` can rename the identifiers.
 - Magnetic models IHJBCC, IHJREST and IHJQX, the permutation models FCC4PERM and BCC4PERM,
-  wildcards (`*`), and `DisorderedPart` with `Subtract="Y"`, whether the disordered parameters
+  wildcards (`*`), and `DisorderedPart` with or without `Subtract="Y"` (without it, Eq. 15 of the
+  paper, maps to pycalphad's `never_disorder`, from 0.11.2), whether the disordered parameters
   sit in a separate phase or in the ordered phase with fewer sublattices. In the second case
   the reader creates the disordered phase as `<PHASE>_DIS`; leave it out of phase lists.
 - `AppendXTDB` files next to the main file.
@@ -72,7 +74,7 @@ Features pycalphad cannot evaluate are reported, never dropped silently:
 | In the file | What happens |
 |---|---|
 | `Configuration="MQMQA"` or another non-CEF entropy model | phase left out, warning |
-| `DisorderedPart` without `Subtract="Y"` (Eq. 15) | phase left out, warning |
+| `DisorderedPart` without `Subtract="Y"`, with pycalphad older than 0.11.2 | phase left out, warning |
 | an unknown model in `AmendPhase` | warning, that contribution is missing |
 | `TernaryXpol` (Kohler, Toop) | warning, pycalphad uses Muggianu |
 | EEC (equal entropy criterion) | warning, not enforced |
@@ -101,7 +103,8 @@ Features pycalphad cannot evaluate are reported, never dropped silently:
 
 ## Validation
 
-- Every TDB file shipped with pycalphad 0.11.1 (35 files, including COST507) is written as
+- Every TDB file shipped with pycalphad 0.11.2 (38 files, including COST507 and a Co-V database
+  with a never-disordering sigma phase) is written as
   XTDB, read back, and every phase pycalphad can build is compared at 60 random site-fraction
   points and three temperatures. Gibbs energies agree within 1e-6 J/mol.
 - `examples/AlC.xtdb` gives the same Gibbs energy as the Al-C example of the XTDB authors

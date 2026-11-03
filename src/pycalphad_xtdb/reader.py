@@ -42,6 +42,7 @@ class _Phase:
     disordered: str = None
     n_summed: int = 0
     synthesize_disordered: bool = False
+    never_disorder: bool = False
 
 
 def read_xtdb(dbf, fd):
@@ -312,17 +313,29 @@ def _read_phase(p, afm):
     dis = amend.find("DisorderedPart")
     if dis is not None:
         if (dis.get("Subtract") or "").strip().upper() not in ("Y", "YES"):
-            warnings.warn(f"Phase {name}: a DisorderedPart without Subtract=\"Y\" (Eq. 15 of "
-                          f"the XTDB paper) has no counterpart in pycalphad, which always "
-                          f"subtracts the ordered energy at the disordered state; the phase "
-                          f"is left out of the database.")
-            return None
+            # Eq. 15 of the XTDB paper, the TDB NEVER_DISORDER option
+            if not _supports_never_disorder():
+                warnings.warn(f"Phase {name}: a DisorderedPart without Subtract=\"Y\" (Eq. 15 "
+                              f"of the XTDB paper) needs pycalphad 0.11.2 or later; the phase "
+                              f"is left out of the database.")
+                return None
+            ph.never_disorder = True
         ph.n_summed = int(dis.get("Sum"))
         ph.disordered = (dis.get("Disordered") or "").strip().upper() or None
         if ph.disordered is None:
             ph.disordered = name + "_DIS"
             ph.synthesize_disordered = True
     return ph
+
+
+def _supports_never_disorder():
+    """pycalphad 0.11.2 added the never_disorder hint (no subtraction at the disordered state)."""
+    import inspect
+    from pycalphad import Model
+    try:
+        return "never_disorder" in inspect.getsource(Model.atomic_ordering_energy)
+    except (OSError, TypeError):
+        return False
 
 
 def _link_disordered(dbf, phases):
@@ -342,6 +355,8 @@ def _link_disordered(dbf, phases):
         if ph.disordered not in dbf.phases:
             raise ValueError(f"Phase {ph.name}: disordered phase {ph.disordered} is not defined")
         hint = {"ordered_phase": ph.name, "disordered_phase": ph.disordered}
+        if ph.never_disorder:
+            hint["never_disorder"] = True
         dbf.phases[ph.name].model_hints.update(hint)
         dbf.phases[ph.disordered].model_hints.update(hint)
 
