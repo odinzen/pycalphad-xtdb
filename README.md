@@ -131,5 +131,5 @@ Cite the original assessments when you use them.
 
 Code: MIT, copyright Odinzen LLC. Example data: CC BY 4.0. If you use this package, please
 cite it (Zenodo, [doi:10.5281/zenodo.23928488](https://doi.org/10.5281/zenodo.23928488), all
-versions; 0.1.0 is [doi:10.5281/zenodo.23928489](https://doi.org/10.5281/zenodo.23928489)), and
+versions; 0.1.1 is [doi:10.5281/zenodo.23930701](https://doi.org/10.5281/zenodo.23930701)), and
 cite the XTDB paper for the format.
