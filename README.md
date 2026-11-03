@@ -36,11 +36,14 @@ eq = equilibrium(db, ["AL", "C", "VA"], list(db.phases),
 
 ## Third-generation databases need `XTDBModel`
 
-The XTDB paper (Eq. 12) weights the composition-dependent Einstein term by the number of atoms
-in the formula unit. pycalphad's `Model` adds one Einstein oscillator per formula unit, so every
-endmember with more than one atom loses part of its vibrational energy. Pure elements are not
-affected, so a melting point can look right while the compounds are wrong. For Al4C3 (7 atoms)
-from the He et al. (2021) Al-C assessment:
+XTDB and TDB count the Einstein term differently. XTDB's `LNTH` gives one Einstein oscillator
+per atom (XTDB paper, Eq. 12). TDB's `THETA` gives one per formula unit, which is the convention
+Thermo-Calc uses and TDB files are written for, and pycalphad keeps it on purpose
+([pycalphad#760](https://github.com/pycalphad/pycalphad/issues/760)); TDB assessments put the
+extra oscillators of a compound into its Gibbs energy instead. So an XTDB database calculated
+with pycalphad's `Model` loses part of the vibrational energy of every endmember with more than
+one atom. Pure elements are not affected, so a melting point can look right while the compounds
+are wrong. For Al4C3 (7 atoms) from the He et al. (2021) Al-C assessment:
 
 | | `XTDBModel` | pycalphad `Model` |
 |---|---|---|
@@ -48,10 +51,12 @@ from the He et al. (2021) Al-C assessment:
 | Cp at 1000 K, J/(mol-atom K) | 3.04 R | 0.51 R |
 | Al4C3 decomposition | 2425 K (measured 2156 degC = 2429 K) | Al4C3 not stable at 2000 K |
 
-`XTDBModel` is a subclass of `Model` with the Einstein term weighted as the paper specifies.
-It also evaluates the Einstein and two-state terms with the gas constant the file states
-(8.31451 in the published files) instead of pycalphad's 8.3145. The reader warns when a
-database has Einstein parameters on multi-atom endmembers.
+`XTDBModel` is a subclass of `Model` that counts one oscillator per atom for phases read from an
+XTDB file and keeps the TDB meaning for every other phase, so it is safe on a mixed or TDB-origin
+database. It also evaluates the Einstein and two-state terms with the gas constant the file
+states (8.31451 in the published files) instead of pycalphad's 8.3145. The reader warns when an
+XTDB database has Einstein parameters on multi-atom endmembers, and the writer warns when a TDB
+`THETA` on such an endmember is written as `LNTH`, since the two then mean different things.
 
 ## What is translated
 
@@ -81,6 +86,7 @@ Features pycalphad cannot evaluate are reported, never dropped silently:
 | a function that cannot be parsed | warning if unused, error if a parameter uses it |
 | a function that is used but never defined | warning, pycalphad evaluates it as zero |
 | a parameter with the wrong number of sublattices | warning, parameter skipped |
+| writing a TDB `THETA` on a multi-atom endmember | warning, XTDB `LNTH` means one oscillator per atom |
 
 ## Choices where the paper leaves room
 

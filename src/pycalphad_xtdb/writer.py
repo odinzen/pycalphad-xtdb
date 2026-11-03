@@ -7,6 +7,7 @@ from xml.sax.saxutils import quoteattr
 
 from . import __version__
 from . import expr as X
+from .model import PER_ATOM_HINT, multi_atom_theta_phases
 
 _TYPE_TO_MPID = {"THETA": "LNTH"}
 _PERM_MODELS = {"symmetry_FCC_4SL": "FCC4PERM", "symmetry_BCC_4SL": "BCC4PERM"}
@@ -41,6 +42,17 @@ def xtdb_text(dbf, signature="pycalphad-xtdb", date=None):
                      f'Stoichiometry={quoteattr(_stoichiometry(sp))} />')
 
     params = [p for p in dbf._parameters.all() if not p.get("_generated_by_symmetry_option")]
+    multi = [name for name in multi_atom_theta_phases(dbf)
+             if not dbf.phases[name].model_hints.get(PER_ATOM_HINT)]
+    if multi:
+        warnings.warn(
+            f"THETA parameters on endmembers with more than one atom per formula unit in {multi} "
+            f"are written as XTDB LNTH. They do not mean the same thing: TDB's THETA (the "
+            f"Thermo-Calc convention pycalphad follows) gives one Einstein oscillator per formula "
+            f"unit, XTDB's LNTH one per atom (XTDB paper, Eq. 12). Software that follows the XTDB "
+            f"paper, and pycalphad_xtdb.XTDBModel, will give these endmembers a larger Einstein "
+            f"term than the source database; pycalphad's default Model reads them back unchanged.",
+            stacklevel=3)
     for name in sorted(dbf.phases):
         lines += _phase(dbf, dbf.phases[name], params)
 

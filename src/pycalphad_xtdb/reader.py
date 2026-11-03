@@ -16,7 +16,7 @@ from pycalphad.io.tdb import (KNOWN_SUBLATTICE_SYMMETRY_RELATIONS, _molmass,
 from pycalphad.variables import Species
 
 from . import expr as X
-from .model import XTDBModel
+from .model import PER_ATOM_HINT, XTDBModel, multi_atom_theta_phases
 
 # Structure factor p of the Inden-Hillert-Jarl function for each magnetic model Id, and
 # the antiferromagnetic factor when the file gives none. IHJQX is the Xiong form, which
@@ -110,6 +110,8 @@ def read_xtdb(dbf, fd):
     dbf.process_parameter_queue()
     add_phase_symmetry_ordering_parameters(dbf)
     _permute_unordered_phases(dbf, phases)
+    for param in dbf.search(where("parameter_type") == "THETA"):
+        dbf.phases[param["phase_name"]].model_hints[PER_ATOM_HINT] = True
     _warn_einstein_weighting(dbf)
 
 
@@ -444,19 +446,13 @@ def _permute_unordered_phases(dbf, phases):
 
 
 def _warn_einstein_weighting(dbf):
-    multi = set()
-    for param in dbf.search(where("parameter_type") == "THETA"):
-        phase = dbf.phases[param["phase_name"]]
-        atoms = sum(n for n, subl in zip(phase.sublattices, param["constituent_array"])
-                    if not all(c.name in ("VA", "*") for c in subl))
-        if abs(atoms - 1) > 1e-12:
-            multi.add(phase.name)
+    multi = multi_atom_theta_phases(dbf)
     if multi:
         warnings.warn(
-            "Einstein (LNTH) parameters on endmembers with more than one atom per formula "
-            f"unit in {sorted(multi)}. Calculate with model=pycalphad_xtdb.XTDBModel; "
-            "pycalphad's default Model gives these endmembers one Einstein oscillator per "
-            "formula unit instead of one per atom (XTDB paper, Eq. 12).", stacklevel=3)
+            f"Einstein (LNTH) parameters on endmembers with more than one atom per formula unit in "
+            f"{multi}. XTDB counts one oscillator per atom (XTDB paper, Eq. 12), so calculate with "
+            f"model=pycalphad_xtdb.XTDBModel; pycalphad's default Model follows the TDB (Thermo-Calc) "
+            f"convention of one per formula unit.", stacklevel=3)
 
 
 __all__ = ["read_xtdb", "XTDBModel"]

@@ -114,7 +114,9 @@ def test_al4c3_peritectic():
 
 def test_write_then_read_keeps_gein_and_values():
     db = _db()
-    text = pycalphad_xtdb.xtdb_text(db)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")  # XTDB-origin LNTH keeps its meaning, so no warning
+        text = pycalphad_xtdb.xtdb_text(db)
     assert "GEIN(1953.3)" in text and "LNTH(AL4C3,AL:C;0)" in text
     assert "GD(LIQUID,AL;0)" in text and "LIQ2STATE" in text
     assert 'Id="R" Expr="+8.31451;"' in text

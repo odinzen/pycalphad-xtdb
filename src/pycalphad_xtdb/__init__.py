@@ -5,7 +5,7 @@ XTDB file and ``db.to_file("out.xtdb")`` writes one. Third-generation databases 
 and two-state liquid) should be calculated with ``model=XTDBModel``.
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from pycalphad import Database
 

@@ -298,3 +298,51 @@ def test_append_files_are_read(tmp_path):
         warnings.simplefilter("ignore")
         db = Database(str(tmp_path / "main.xtdb"))
     assert gm(db, "LIQUID", ["AG"], [1.0]) == pytest.approx(-1000.0, abs=1e-9)
+
+
+THETA_TDB = """
+ELEMENT AL BLANK 0 0 0 !
+ELEMENT C  BLANK 0 0 0 !
+PHASE ONE % 1 1 !
+CONSTITUENT ONE :AL: !
+PARAMETER G(ONE,AL;0) 1 0; 6000 N !
+PARAMETER THETA(ONE,AL;0) 1 LN(300); 6000 N !
+PHASE TWO % 2 1 1 !
+CONSTITUENT TWO :AL:C: !
+PARAMETER G(TWO,AL:C;0) 1 0; 6000 N !
+PARAMETER THETA(TWO,AL:C;0) 1 LN(300); 6000 N !
+"""
+
+
+def _tdb(text):
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return Database(text)
+
+
+def test_writer_warns_when_tdb_theta_changes_meaning():
+    db = _tdb(THETA_TDB)
+    with pytest.warns(UserWarning, match=r"\['TWO'\] are written as XTDB LNTH"):
+        pycalphad_xtdb.xtdb_text(db)
+    one_atom = _tdb(THETA_TDB.split("PHASE TWO")[0])
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        pycalphad_xtdb.xtdb_text(one_atom)
+
+
+def test_xtdbmodel_keeps_the_tdb_convention_for_tdb_phases():
+    db = _tdb(THETA_TDB)
+    for phase, comps, y in (("ONE", ["AL"], [1.0]), ("TWO", ["AL", "C"], [1.0, 1.0])):
+        g_x = gm(db, phase, comps, y, T=300.0, model=pycalphad_xtdb.XTDBModel)
+        g_d = gm(db, phase, comps, y, T=300.0, model=Model)
+        assert float(g_x) == pytest.approx(float(g_d), abs=0.05)  # only R differs, 8.3145 both here
+    # the same parameters read from XTDB count one oscillator per atom
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        db2 = Database.from_string(pycalphad_xtdb.xtdb_text(db), fmt="xtdb")
+    cp = lambda d, m: float(calculate(d, ["AL", "C"], "TWO", T=3000.0, P=101325, N=1,
+                                      points=np.array([[1.0, 1.0]]), model=m,
+                                      output="CPM").CPM.values.squeeze()) / float(v.R)
+    assert cp(db, pycalphad_xtdb.XTDBModel) == pytest.approx(1.5, abs=0.01)
+    assert cp(db2, pycalphad_xtdb.XTDBModel) == pytest.approx(3.0, abs=0.01)
+    assert cp(db2, Model) == pytest.approx(1.5, abs=0.01)
