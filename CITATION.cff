@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below, and cite Sundman et al. (2025) for the XTDB format."
+title: "pycalphad-xtdb: XTDB database support for pycalphad"
+version: 0.1.0
+date-released: 2026-11-03
+license: MIT
+repository-code: "https://github.com/odinzen/pycalphad-xtdb"
+authors:
+  - family-names: Bustamante
+    given-names: Michael E.
+    orcid: "https://orcid.org/0009-0009-9001-8151"
+    affiliation: Odinzen LLC
+keywords:
+  - CALPHAD
+  - pycalphad
+  - XTDB
+  - thermodynamic database
+references:
+  - type: article
+    title: "XTDB, an XML based format for Calphad databases"
+    authors:
+      - family-names: Sundman
+        given-names: Bo
+      - name: "et al."
+    journal: "Calphad"
+    volume: 90
+    start: 102849
+    year: 2025
+    doi: 10.1016/j.calphad.2025.102849

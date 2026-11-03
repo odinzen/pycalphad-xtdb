@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycalphad-xtdb"
+dynamic = ["version"]
+description = "Read and write XTDB (XML) thermodynamic databases in pycalphad"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Michael E. Bustamante", email = "michaelbusta@odinzen.io" }]
+requires-python = ">=3.10"
+dependencies = ["pycalphad>=0.11"]
+keywords = ["CALPHAD", "thermodynamics", "pycalphad", "XTDB", "TDB"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/odinzen/pycalphad-xtdb"
+
+[tool.setuptools.dynamic]
+version = { attr = "pycalphad_xtdb.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

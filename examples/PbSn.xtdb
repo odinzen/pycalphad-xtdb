@@ -1,0 +1,64 @@
+<XTDB Version="0.1.5" Software="hand-written" Date="2026/11/03" Signature="Odinzen LLC">
+<!-- Pb-Sn in XTDB format: second-generation SGTE unaries with Redlich-Kister excess terms.
+     Parameters of T.L. Ngai, Y.A. Chang, "A thermodynamic analysis of the Pb-Sn system and
+     the calculation of the Pb-Sn phase diagram", Calphad 5 (1981) 267-276,
+     doi:10.1016/0364-5916(81)90009-2, as tabulated in the open NIMS pbsn.tdb
+     (Abe, Hashimoto, Sawada 2011). Our own XTDB transcription by Odinzen LLC. CC BY 4.0. -->
+<Defaults LowT="298.15" HighT="6000" Elements="VA /-" />
+<Element Id="PB" Refstate="FCC_A1" Mass="207.2" H298="6878.5" S298="64.785" />
+<Element Id="SN" Refstate="BCT_A5" Mass="118.71" H298="6322.0" S298="51.195" />
+<Species Id="VA" Stoichiometry="VA" />
+<Species Id="PB" Stoichiometry="PB" />
+<Species Id="SN" Stoichiometry="SN" />
+
+<Phase Id="LIQUID" Configuration="CEF" State="L" >
+  <Sublattices NumberOf="1" Multiplicities="1" >
+    <Constituents Sublattice="1" List="PB SN" />
+  </Sublattices>
+</Phase>
+<Phase Id="FCC_A1" Configuration="CEF" State="S" >
+  <Sublattices NumberOf="2" Multiplicities="1 1" >
+    <Constituents Sublattice="1" List="PB SN" />
+    <Constituents Sublattice="2" List="VA" />
+  </Sublattices>
+</Phase>
+<Phase Id="BCT_A5" Configuration="CEF" State="S" >
+  <Sublattices NumberOf="2" Multiplicities="1 3" >
+    <Constituents Sublattice="1" List="PB SN" />
+    <Constituents Sublattice="2" List="VA" />
+  </Sublattices>
+</Phase>
+
+<TPfun Id="GHSERPB" LowT="298.15" Expr="-7650.085+101.715188*T-24.5242231*T*LN(T)-3.65895E-3*T**2-0.24395E-6*T**3;" HighT="600.65" >
+  <Trange Expr="-10531.115+154.258155*T-32.4913959*T*LN(T)+1.54613E-3*T**2+805.644E23*T**(-9);" HighT="1200" />
+  <Trange Expr="+4157.596+53.154045*T-18.9640637*T*LN(T)-2.882943E-3*T**2+0.098144E-6*T**3-2696755*T**(-1)+805.644E23*T**(-9);" HighT="5000" />
+</TPfun>
+<TPfun Id="GPBLIQ" LowT="298.15" Expr="+4672.157-7.750257*T-6.0144E-19*T**7+GHSERPB;" HighT="600.65" >
+  <Trange Expr="+4853.112-8.066587*T-8.05644E25*T**(-9)+GHSERPB;" HighT="5000" />
+</TPfun>
+<TPfun Id="GPBBCT" LowT="298.15" Expr="+489+3.52*T+GHSERPB;" HighT="5000" />
+<TPfun Id="GHSERSN" LowT="100" Expr="-7958.517+122.750027*T-25.858*T*LN(T)+5.1185E-04*T**2-3.192767E-06*T**3+18440*T**(-1);" HighT="250" >
+  <Trange Expr="-5855.135+65.427891*T-15.961*T*LN(T)-.0188702*T**2+3.121167E-06*T**3-61960*T**(-1);" HighT="505.08" />
+  <Trange Expr="+2524.724+3.989845*T-8.2590486*T*LN(T)-.016814429*T**2+2.623131E-06*T**3-1081244*T**(-1)-1.2307E+25*T**(-9);" HighT="800" />
+  <Trange Expr="-8256.959+138.981456*T-28.4512*T*LN(T)-1.2307E+25*T**(-9);" HighT="3000" />
+</TPfun>
+<TPfun Id="GSNLIQ" LowT="100" Expr="+7104.222-14.09088*T+1.49316649E-18*T**7+GHSERSN;" HighT="505.06" >
+  <Trange Expr="+6970.705-13.813302*T+1.24912E+25*T**(-9)+GHSERSN;" HighT="3000" />
+</TPfun>
+<TPfun Id="GSNFCC" LowT="298.15" Expr="+4150-5.2*T+GHSERSN;" HighT="3000" />
+
+<Parameter Id="G(LIQUID,PB;0)" Expr="+GPBLIQ;" Bibref="81Ngai" />
+<Parameter Id="G(LIQUID,SN;0)" Expr="+GSNLIQ;" Bibref="81Ngai" />
+<Parameter Id="G(LIQUID,PB,SN;0)" Expr="+5125+1.46424*T;" Bibref="81Ngai" />
+<Parameter Id="G(LIQUID,PB,SN;1)" Expr="+293.82;" Bibref="81Ngai" />
+<Parameter Id="G(FCC_A1,PB:VA;0)" Expr="+GHSERPB;" Bibref="81Ngai" />
+<Parameter Id="G(FCC_A1,SN:VA;0)" Expr="+GSNFCC;" Bibref="81Ngai" />
+<Parameter Id="G(FCC_A1,PB,SN:VA;0)" Expr="+5132.41+1.56312*T;" Bibref="81Ngai" />
+<Parameter Id="G(BCT_A5,PB:VA;0)" Expr="+GPBBCT;" Bibref="81Ngai" />
+<Parameter Id="G(BCT_A5,SN:VA;0)" Expr="+GHSERSN;" Bibref="81Ngai" />
+<Parameter Id="G(BCT_A5,PB,SN:VA;0)" Expr="+17117.78-11.8066*T;" Bibref="81Ngai" />
+
+<Bibliography>
+<Bibitem Id="81Ngai" Text="T.L. Ngai, Y.A. Chang, Calphad 5 (1981) 267-276" />
+</Bibliography>
+</XTDB>

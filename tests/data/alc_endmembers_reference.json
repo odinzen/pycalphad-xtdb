@@ -1,0 +1,269 @@
+{
+ "source": "Endmember Gibbs energies of examples/AlC.xtdb from the independent reference evaluator of the Hephaestus XTDB engine (Odinzen LLC, data/xtdb-alc/xtdb_ref.py, 2026-09), which weights the LNTH Einstein term by the atoms per formula unit and uses R = 8.31451. J per mole of atoms.",
+ "rows": [
+  {
+   "phase": "GRAPHITE",
+   "endmember": "C",
+   "T": 10.0,
+   "G_per_mole_atoms": -1053.2461860458388
+  },
+  {
+   "phase": "GRAPHITE",
+   "endmember": "C",
+   "T": 300.0,
+   "G_per_mole_atoms": -1719.1933954249216
+  },
+  {
+   "phase": "GRAPHITE",
+   "endmember": "C",
+   "T": 933.47,
+   "G_per_mole_atoms": -11077.445283248158
+  },
+  {
+   "phase": "GRAPHITE",
+   "endmember": "C",
+   "T": 2500.0,
+   "G_per_mole_atoms": -67911.4944439366
+  },
+  {
+   "phase": "DIAMOND",
+   "endmember": "C",
+   "T": 10.0,
+   "G_per_mole_atoms": 1370.3088326679062
+  },
+  {
+   "phase": "DIAMOND",
+   "endmember": "C",
+   "T": 300.0,
+   "G_per_mole_atoms": 1182.7493694341574
+  },
+  {
+   "phase": "DIAMOND",
+   "endmember": "C",
+   "T": 933.47,
+   "G_per_mole_atoms": -5471.122995270594
+  },
+  {
+   "phase": "DIAMOND",
+   "endmember": "C",
+   "T": 2500.0,
+   "G_per_mole_atoms": -54835.04793963938
+  },
+  {
+   "phase": "AL4C3",
+   "endmember": "AL:C",
+   "T": 10.0,
+   "G_per_mole_atoms": -30909.155072942864
+  },
+  {
+   "phase": "AL4C3",
+   "endmember": "AL:C",
+   "T": 300.0,
+   "G_per_mole_atoms": -32348.1686996681
+  },
+  {
+   "phase": "AL4C3",
+   "endmember": "AL:C",
+   "T": 933.47,
+   "G_per_mole_atoms": -49184.81693758805
+  },
+  {
+   "phase": "AL4C3",
+   "endmember": "AL:C",
+   "T": 2500.0,
+   "G_per_mole_atoms": -131226.90625463432
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:VA",
+   "T": 10.0,
+   "G_per_mole_atoms": -4630.6391190395225
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:VA",
+   "T": 300.0,
+   "G_per_mole_atoms": -8475.296644571337
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:VA",
+   "T": 933.47,
+   "G_per_mole_atoms": -37784.82030537748
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:VA",
+   "T": 2500.0,
+   "G_per_mole_atoms": -165460.68615801248
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:C",
+   "T": 10.0,
+   "G_per_mole_atoms": 35515.90991231429
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:C",
+   "T": 300.0,
+   "G_per_mole_atoms": 34117.2287569371
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:C",
+   "T": 933.47,
+   "G_per_mole_atoms": 15552.766685216855
+  },
+  {
+   "phase": "FCC_A1",
+   "endmember": "AL:C",
+   "T": 2500.0,
+   "G_per_mole_atoms": -77417.4627698377
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:VA",
+   "T": 10.0,
+   "G_per_mole_atoms": 4828.772630941641
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:VA",
+   "T": 300.0,
+   "G_per_mole_atoms": 64.64499502387434
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:VA",
+   "T": 933.47,
+   "G_per_mole_atoms": -32257.122248472573
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:VA",
+   "T": 2500.0,
+   "G_per_mole_atoms": -167511.4920974297
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:C",
+   "T": 10.0,
+   "G_per_mole_atoms": 262474.0738929911
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:C",
+   "T": 300.0,
+   "G_per_mole_atoms": 261981.85299294314
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:C",
+   "T": 933.47,
+   "G_per_mole_atoms": 250032.22587158496
+  },
+  {
+   "phase": "BCC_A2",
+   "endmember": "AL:C",
+   "T": 2500.0,
+   "G_per_mole_atoms": 178914.55662498262
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:VA",
+   "T": 10.0,
+   "G_per_mole_atoms": 600.9255809596616
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:VA",
+   "T": 300.0,
+   "G_per_mole_atoms": -3580.0697999717277
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:VA",
+   "T": 933.47,
+   "G_per_mole_atoms": -34022.51496392794
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:VA",
+   "T": 2500.0,
+   "G_per_mole_atoms": -164554.68194858645
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:C",
+   "T": 10.0,
+   "G_per_mole_atoms": 1456820.4621935298
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:C",
+   "T": 300.0,
+   "G_per_mole_atoms": 1454833.8389153332
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:C",
+   "T": 933.47,
+   "G_per_mole_atoms": 1433154.7599718336
+  },
+  {
+   "phase": "HCP_A3",
+   "endmember": "AL:C",
+   "T": 2500.0,
+   "G_per_mole_atoms": 1329666.2646007806
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "AL",
+   "T": 10.0,
+   "G_per_mole_atoms": 2921.0133099976783
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "AL",
+   "T": 300.0,
+   "G_per_mole_atoms": -2441.0213938562856
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "AL",
+   "T": 933.47,
+   "G_per_mole_atoms": -37784.78118929698
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "AL",
+   "T": 2500.0,
+   "G_per_mole_atoms": -175431.94281078852
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "C",
+   "T": 10.0,
+   "G_per_mole_atoms": 81265.42915
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "C",
+   "T": 300.0,
+   "G_per_mole_atoms": 78779.1056392249
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "C",
+   "T": 933.47,
+   "G_per_mole_atoms": 67321.21269258617
+  },
+  {
+   "phase": "LIQUID",
+   "endmember": "C",
+   "T": 2500.0,
+   "G_per_mole_atoms": -12528.291166580868
+  }
+ ]
+}
